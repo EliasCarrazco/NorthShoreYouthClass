@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NorthShore Youth Class</title>
+
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#4CAF50"/>
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('file:///D:/cursor/ClassQuest/old-paper.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2a67a8;
+            font-size: 2.5em;
+            font-family: 'Papyrus', 'Comic Sans MS', cursive;
+        }
+        nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        nav button, .action-button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        nav button:hover, .action-button:hover {
+            background-color: #45a049;
+        }
+        .screen {
+            padding: 5px 5px 5px 5px;
+            margin: 0 auto;
+            max-width: 1200px;
+            background-image: url('file:///D:/cursor/ClassQuest/screen-wooden.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            border-radius: 2px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .character-display {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .character-display .profile-background {
+            width: 300px;
+            height: 300px;
+            border-radius: 10px;
+            position: relative;
+            margin: 0 auto;
+            background-image: url('file:///D:/cursor/ClassQuest/profile-background.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .character-display img.character-image {
+            max-width: 234px;
+            height: auto;
+            border-radius: 0;
+            border: none;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            animation: bounce 2s infinite ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, -50%); }
+            50% { transform: translate(-50%, -58%); }
+        }
+
+        .character-selection {
+            text-align: center;
+            margin: 30px auto;
+            max-width: 1200px;
+        }
+        .character-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: nowrap;
+        }
+        .character-option {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #8b7355;
+            border-radius: 8px;
+            padding: 15px;
+            width: 200px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .character-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-color: #ffd700;
+        }
+        .character-option img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .character-option h3 {
+            color: #2a67a8;
+            margin: 10px 0;
+        }
+        .character-option.selected {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        /* Character Creation Form Styles */
+        .character-creation-form {
+            display: none;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2a67a8;
+        }
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        .gender-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .gender-option {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .gender-option.selected {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+        .gender-option img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            animation: softBounce 2s infinite ease-in-out;
+        }
+        .create-character-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .create-character-btn:hover {
+            background-color: #45a049;
+        }
+        .gender-preview {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .gender-preview img {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+            animation: softBounce 2s infinite ease-in-out;
+        }
+
+        /* Character Profile Page Styles */
+        .character-profile {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background-image: url('file:///D:/cursor/ClassQuest/wooden-frame.png');
+            background-repeat: no-repeat;
+            background-size: 300px auto;
+            background-position: center top;
+            border-radius: 2px;
+            position: relative;
+            max-width: 300px;
+            margin: 0 auto;
+            color: black;
+            margin-top: -20px; /* Negative margin to pull it closer */
+        }
+        .character-profile h2 {
+            font-size: 2.5em;
+            font-family: 'Papyrus', 'Comic Sans MS', cursive;
+            color: black;
+            text-align: center;
+        }
+        .character-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+            position: relative;
+            z-index: 2;
+            max-width: 800px; /* Added max-width to prevent stretching */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-width: 120px; /* Set minimum width */
+            width: 120px; /* Set fixed width */
+            margin: 0 auto; /* Center the cards */
+        }
+        .stat-card img {
+            width: 40px;
+            height: 40px;
+            margin: 3px auto;
+            display: block;
+        }
+        .stat-card h3 {
+            margin: 0 0 5px 0;
+            color: black;
+            font-size: 0.9em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+        }
+        .stat-card p {
+            margin: 3px 0;
+            font-size: 0.8em;
+            text-align: center;
+        }
+        .stat-card .level-text {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: black;
+            margin: 5px 0;
+        }
+        
+        /* Points Management Styles */
+        .points-management {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .points-management h3 {
+            margin: 0 0 5px 0;
+            color: black;
+            font-size: 0.9em;
+        }
+        .points-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+        .points-input {
+            width: 40px;
+            padding: 4px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.8em;
+            text-align: center;
+        }
+        .points-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .add-points-btn {
+            padding: 4px 8px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .subtract-points-btn {
+            padding: 4px 8px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .add-points-btn:hover {
+            background-color: #45a049;
+        }
+        .subtract-points-btn:hover {
+            background-color: #c82333;
+        }
+        .points-history {
+            margin-top: 5px;
+            max-height: 80px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 0.7em;
+        }
+        .points-history-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+        }
+        .points-history-item:last-child {
+            border-bottom: none;
+        }
+        .points-positive {
+            color: #4CAF50;
+        }
+        .points-negative {
+            color: #dc3545;
+        }
+
+        /* Back Button Styles */
+        .back-button {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #2a67a8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.8em;
+        }
+        .back-button:hover {
+            background-color: #1e4c7a;
+        }
+
+        /* Character List Styles */
+        .character-list {
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 10px 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .character-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .add-character-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .add-character-btn:hover {
+            background-color: #45a049;
+        }
+        .character-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .rank-badge {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: #ffd700;
+            color: #2a67a8;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            min-width: 30px;
+            text-align: center;
+        }
+        .character-card:not(.top-ranked) .rank-badge {
+            background: white;
+            color: black;
+            border: 2px solid black;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .character-card.top-ranked {
+            background: linear-gradient(to right, #e6f3ff, #f5f5f5);
+            border: 2px solid #4a90e2;
+            box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+            transform: scale(1.02);
+        }
+        .character-card.top-ranked .rank-badge {
+            background: #4a90e2;
+            color: white;
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+        }
+        .character-card:hover {
+            transform: translateX(5px);
+            background: #e8e8e8;
+        }
+        .character-card.top-ranked:hover {
+            transform: translateX(5px) scale(1.02);
+            background: linear-gradient(to right, #d9edff, #e8e8e8);
+        }
+        .character-card img {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+            border-radius: 4px;
+        }
+        .character-info {
+            flex-grow: 1;
+        }
+        .character-info h3 {
+            margin: 0;
+            color: black;
+            font-family: "Comic Sans MS", "Comic Sans", cursive;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        .character-info p {
+            margin: 5px 0 0 0;
+            color: black;
+            font-size: 1.1em;
+        }
+        .character-info .level-display {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: black;
+            margin: 10px 0;
+        }
+        .character-info p .character-class {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: black;
+        }
+        .character-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .view-btn {
+            padding: 5px 15px;
+            background-color: #2a67a8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-btn {
+            padding: 5px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .view-btn:hover {
+            background-color: #1e4c7a;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .no-characters {
+            text-align: center;
+            padding: 20px;
+            color: black;
+            font-style: italic;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin: 0 auto;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .logo-container img {
+            width: 600px;
+            height: 600px;
+            object-fit: contain;
+            margin: 0;
+            padding: 0;
+            display: block;
+        }
+        .logo-title {
+            font-family: "Comic Sans MS", "Comic Sans", cursive;
+            color: #2a67a8;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+            font-size: 2.5em;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 0 20px;
+        }
+        .home-btn {
+            padding: 10px 20px;
+            background-color: #2a67a8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .home-btn:hover {
+            background-color: #1e4c7a;
+        }
+        .confirm-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .confirm-btn:hover {
+            background-color: #45a049;
+        }
+        .confirm-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* Character Preview Styles */
+        .character-preview {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .character-preview img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            animation: softBounce 2s infinite ease-in-out;
+        }
+        @keyframes softBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .character-preview h3 {
+            color: #2a67a8;
+            margin: 10px 0;
+        }
+        .character-preview p {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .level-controls {
+            display: flex;
+            gap: 5px;
+            margin-right: 10px;
+        }
+        .level-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .plus-btn {
+            background-color: #4CAF50;
+        }
+        .minus-btn {
+            background-color: #dc3545;
+        }
+        .plus-btn:hover {
+            background-color: #45a049;
+        }
+        .minus-btn:hover {
+            background-color: #c82333;
+        }
+
+        .shop-btn {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .shop-screen {
+            display: none;
+        }
+        .shop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2a67a8;
+        }
+        .shop-header h2 {
+            margin: 0;
+            color: #2a67a8;
+        }
+        .shop-gems {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1.2em;
+            color: #6c5ce7;
+            background: rgba(108, 92, 231, 0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .shop-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            border: 1px solid #ddd;
+        }
+        .shop-item:hover {
+            transform: translateY(-2px);
+        }
+        .shop-item h3 {
+            margin: 0 0 10px 0;
+            color: #2d3436;
+        }
+        .shop-item p {
+            margin: 5px 0;
+            color: #636e72;
+        }
+        .shop-item button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .shop-item button:hover {
+            background-color: #5f4dd0;
+        }
+        .shop-item button:disabled {
+            background-color: #b2bec3;
+            cursor: not-allowed;
+        }
+
+        .shop-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .shop-image:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .shop-container {
+            display: none;
+            text-align: right;
+            margin: 10px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        #profile-hero-name {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: black;
+            margin: 10px 0;
+        }
+        #profile-hero-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: black;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen">
+        <div class="logo-container">
+            <img src="classquest-logo.png" alt="NorthShore Youth Class" title="NorthShore Youth Class">
+        </div>
+        
+        <!-- Character List -->
+        <div class="character-list" id="character-list">
+            <div class="character-list-header">
+                <h2>NorthShore Characters</h2>
+                <button class="add-character-btn" onclick="showCharacterCreation()">Add New Character</button>
+            </div>
+            <div id="characters-container">
+                <!-- Characters will be listed here -->
+            </div>
+        </div>
+
+        <!-- Character Creation Form -->
+        <div class="character-creation-form" id="character-creation-form">
+            <h2>Create Your Character</h2>
+            <div class="form-group">
+                <label for="character-name">Choose Your Name:</label>
+                <input type="text" id="character-name" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label>Choose Your Gender:</label>
+                <div class="gender-options">
+                    <div class="gender-option" onclick="selectGender('male')" data-gender="male">
+                        <img src="prophet-character.png" alt="Male Character" id="male-preview-image">
+                        <div>Male</div>
+                    </div>
+                    <div class="gender-option" onclick="selectGender('female')" data-gender="female">
+                        <img src="prophet-female-character.png" alt="Female Character" id="female-preview-image">
+                        <div>Female</div>
+                    </div>
+                </div>
+            </div>
+            <button class="create-character-btn" onclick="createCharacter()">Create Character</button>
+        </div>
+
+        <!-- Character Profile Page -->
+        <div class="character-profile" id="character-profile">
+            <h2>Character Profile</h2>
+            <div class="character-display">
+                <div class="profile-background">
+                    <img src="prophet-character.png" alt="Your Hero" id="profile-hero-image" class="character-image">
+                </div>
+                <p id="profile-hero-name">Character Name</p>
+                <p id="profile-hero-title">Title</p>
+            </div>
+            <div class="shop-container">
+                <a href="#" onclick="showShop(); return false;">
+                    <img src="file:///D:/cursor/ClassQuest/Buildings%20(1).jpeg" alt="Shop" class="shop-image">
+                </a>
+            </div>
+            <div class="character-stats" style="position: relative; z-index: 2;">
+                <div class="stat-card">
+                    <h3>Character Info</h3>
+                    <p>Class: <span id="profile-class"></span></p>
+                    <p>Gender: <span id="profile-gender"></span></p>
+                    <p class="level-display">Level: <span id="profile-points">0</span></p>
+                </div>
+                <div class="stat-card">
+                    <h3>Pet</h3>
+                    <img src="file:///D:/cursor/ClassQuest/pet-grey.png" alt="Pet" style="width: 100px; height: 100px; margin: 10px auto; display: block;">
+                    <p style="text-align: center; margin: 5px 0;">Pet</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Gems</h3>
+                    <img src="file:///D:/cursor/ClassQuest/gem-image.png" alt="Gems" style="width: 100px; height: 100px; margin: 10px auto; display: block;">
+                    <p style="text-align: center; margin: 5px 0;">Gems: <span id="gems-count">0</span></p>
+                    <div class="level-controls" style="justify-content: center; margin-top: 10px;">
+                        <button class="level-btn minus-btn" onclick="updateGems(false)">-</button>
+                        <button class="level-btn plus-btn" onclick="updateGems(true)">+</button>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Achievements</h3>
+                    <div id="profile-achievements">
+                        <span class="achievement-badge">🌟 Welcome to NorthShore Youth Class</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Points Management Section -->
+            <div class="points-management" style="position: relative; z-index: 2;">
+                <h3>Manage Level</h3>
+                <div class="points-controls">
+                    <input type="number" id="points-amount" class="points-input" value="1" min="1">
+                    <div class="points-buttons">
+                        <button class="add-points-btn" onclick="addPoints(true)">Add Level</button>
+                        <button class="subtract-points-btn" onclick="addPoints(false)">Subtract Level</button>
+                    </div>
+                </div>
+                <div class="points-history" id="points-history">
+                    <!-- Points history will be displayed here -->
+                </div>
+            </div>
+            
+            <button class="back-button" onclick="goToMainPage()" style="position: relative; z-index: 2;">Back to Main Page</button>
+        </div>
+
+        <div class="character-selection">
+            <h2>Choose Your Character</h2>
+            <div class="character-options">
+                <div class="character-option" onclick="selectCharacter('prophet')">
+                    <img src="prophet-character.png" alt="Prophet">
+                    <h3>Prophet</h3>
+                    <p>A wise and powerful leader</p>
+                </div>
+                <div class="character-option" onclick="selectCharacter('king')">
+                    <img src="King-character.png" alt="King">
+                    <h3>King</h3>
+                    <p>A noble ruler of the realm</p>
+                </div>
+                <div class="character-option" onclick="selectCharacter('patriarch')">
+                    <img src="patriarch-charater.png" alt="Patriarch">
+                    <h3>Patriarch</h3>
+                    <p>A venerable spiritual guide</p>
+                </div>
+                <div class="character-option" onclick="selectCharacter('disciple')">
+                    <img src="disciple-character.png" alt="Disciple">
+                    <h3>Disciple</h3>
+                    <p>A devoted follower of truth</p>
+                </div>
+            </div>
+            <div class="character-preview" id="character-preview">
+                <img src="" alt="Selected Character" id="preview-image">
+                <h3 id="preview-name"></h3>
+                <p id="preview-description"></p>
+            </div>
+            <div class="nav-buttons">
+                <button class="home-btn" onclick="goToMainPage()">Home</button>
+                <button class="confirm-btn" onclick="confirmCharacterSelection()" id="confirm-selection-btn" disabled>Select Character</button>
+            </div>
+        </div>
+
+        <!-- Shop Section -->
+        <div id="shop-screen" class="shop-screen" style="display: none;">
+            <div class="shop-header">
+                <h2>Item Shop</h2>
+                <div class="shop-gems">
+                    <span>Gems:</span>
+                    <span id="shop-gems-count">0</span>
+                </div>
+                <button onclick="hideShop()">Back to Profile</button>
+            </div>
+            <div id="shop-items" class="shop-items">
+                <!-- Shop items will be loaded here -->
+            </div>
+        </div>
+
+        <p style="text-align: center; font-size: 0.8em; color: #777;">
+            (Offline mode active - Character and points cached locally. Requires Service Worker.)
+        </p>
+    </div>
+
+    <script>
+        console.log("ClassQuest HTML Structure Loaded.");
+        
+        let selectedGender = null;
+        let currentCharacter = null;
+
+        function showCharacterCreation() {
+            // Hide character list
+            document.getElementById('character-list').style.display = 'none';
+            
+            // Show character selection
+            document.querySelector('.character-selection').style.display = 'block';
+            
+            // Reset any previous selection
+            currentCharacter = null;
+            document.querySelectorAll('.character-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.getElementById('confirm-selection-btn').disabled = true;
+        }
+
+        function confirmCharacterSelection() {
+            if (currentCharacter) {
+                // Show character creation form
+                document.querySelector('.character-selection').style.display = 'none';
+                document.getElementById('character-creation-form').style.display = 'block';
+            }
+        }
+
+        function goToMainPage() {
+            // Hide all screens
+            document.getElementById('character-profile').style.display = 'none';
+            document.getElementById('character-creation-form').style.display = 'none';
+            document.querySelector('.character-selection').style.display = 'none';
+            document.getElementById('character-preview').style.display = 'none';
+            
+            // Show character list
+            document.getElementById('character-list').style.display = 'block';
+            
+            // Reset form
+            document.getElementById('character-name').value = '';
+            selectedGender = null;
+            currentCharacter = null;
+            
+            // Reset gender selection
+            document.querySelectorAll('.gender-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // Reset character selection
+            document.querySelectorAll('.character-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.getElementById('confirm-selection-btn').disabled = true;
+
+            // Update character list
+            updateCharacterList();
+        }
+
+        function updateCharacterList() {
+            const container = document.getElementById('characters-container');
+            const characters = JSON.parse(localStorage.getItem('classquest_characters') || '[]');
+            
+            if (characters.length === 0) {
+                container.innerHTML = '<div class="no-characters">No characters created yet. Click "Add New Character" to create one!</div>';
+                return;
+            }
+
+            // Sort characters by points in descending order
+            const sortedCharacters = [...characters].sort((a, b) => (b.points || 0) - (a.points || 0));
+
+            container.innerHTML = sortedCharacters.map((char, index) => {
+                // Fix the image path for patriarch and female king
+                let imagePath = `${char.type}-character.png`;
+                if (char.type === 'patriarch') {
+                    if (char.gender === 'female') {
+                        imagePath = 'file:///D:/cursor/ClassQuest/female-patriarch-character.png';
+                    } else {
+                        imagePath = 'patriarch-charater.png';
+                    }
+                } else if (char.type === 'king' && char.gender === 'female') {
+                    imagePath = 'female-king-character.png';
+                } else if (char.type === 'disciple' && char.gender === 'female') {
+                    imagePath = 'female-disciple-character.png';
+                } else if (char.type === 'prophet' && char.gender === 'female') {
+                    imagePath = 'female-prophet-character.png';
+                }
+                
+                console.log(`Character ${char.name} (${char.type}, ${char.gender}) using image: ${imagePath}`);
+                
+                return `
+                <div class="character-card${index === 0 ? ' top-ranked' : ''}">
+                    <div class="rank-badge">#${index + 1}</div>
+                    <img src="${imagePath}" alt="${char.name}" onerror="this.onerror=null; this.src='placeholder-character.png'; console.log('Failed to load image: ${imagePath}');">
+                    <div class="character-info">
+                        <h3>${char.name}</h3>
+                        <p><span class="character-class">${char.type.charAt(0).toUpperCase() + char.type.slice(1)}</span> • Level ${char.points || 0} • <img src="file:///D:/cursor/ClassQuest/gem-image.png" alt="Gems" style="width: 20px; height: 20px; vertical-align: middle; margin: 0 2px;"> ${char.gems || 0}</p>
+                    </div>
+                    <div class="character-actions">
+                        <div class="level-controls">
+                            <button class="level-btn minus-btn" onclick="quickAddLevel(${characters.indexOf(char)}, false)">-</button>
+                            <button class="level-btn plus-btn" onclick="quickAddLevel(${characters.indexOf(char)}, true)">+</button>
+                        </div>
+                        <button class="view-btn" onclick="viewCharacter(${characters.indexOf(char)})">View</button>
+                        <button class="delete-btn" onclick="deleteCharacter(${characters.indexOf(char)})">Delete</button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function viewCharacter(index) {
+            const characters = JSON.parse(localStorage.getItem('classquest_characters') || '[]');
+            const character = characters[index];
+            
+            // Store the current character index for points management
+            window.currentCharacterIndex = index;
+            
+            // Update profile page with correct image path
+            let imagePath = `${character.type}-character.png`;
+            if (character.type === 'patriarch') {
+                if (character.gender === 'female') {
+                    imagePath = 'file:///D:/cursor/ClassQuest/female-patriarch-character.png';
+                } else {
+                    imagePath = 'patriarch-charater.png';
+                }
+            } else if (character.type === 'king' && character.gender === 'female') {
+                imagePath = 'female-king-character.png';
+            } else if (character.type === 'disciple' && character.gender === 'female') {
+                imagePath = 'female-disciple-character.png';
+            } else if (character.type === 'prophet' && character.gender === 'female') {
+                imagePath = 'female-prophet-character.png';
+            }
+            
+            // Set the image with error handling
+            const profileImage = document.getElementById('profile-hero-image');
+            profileImage.onerror = function() {
+                console.error("Failed to load profile image:", imagePath);
+                this.src = 'placeholder-character.png';
+            };
+            profileImage.src = imagePath;
+            
+            document.getElementById('profile-hero-name').textContent = character.name;
+            document.getElementById('profile-hero-title').textContent = `the ${character.type.charAt(0).toUpperCase() + character.type.slice(1)}`;
+            document.getElementById('profile-class').textContent = character.type.charAt(0).toUpperCase() + character.type.slice(1);
+            document.getElementById('profile-gender').textContent = character.gender.charAt(0).toUpperCase() + character.gender.slice(1);
+            document.getElementById('profile-points').textContent = character.points || 0;
+            document.getElementById('gems-count').textContent = character.gems || 0;
+            
+            // Update points history
+            updatePointsHistory(character);
+
+            // Hide character list and show profile
+            document.getElementById('character-list').style.display = 'none';
+            document.getElementById('character-profile').style.display = 'block';
+        }
+
+        function deleteCharacter(index) {
+            // Create a confirmation dialog
+            const confirmDialog = document.createElement('div');
+            confirmDialog.className = 'confirmation-dialog';
+            confirmDialog.style.position = 'fixed';
+            confirmDialog.style.top = '50%';
+            confirmDialog.style.left = '50%';
+            confirmDialog.style.transform = 'translate(-50%, -50%)';
+            confirmDialog.style.backgroundColor = 'white';
+            confirmDialog.style.padding = '20px';
+            confirmDialog.style.borderRadius = '8px';
+            confirmDialog.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+            confirmDialog.style.zIndex = '1000';
+            confirmDialog.style.textAlign = 'center';
+            confirmDialog.style.minWidth = '300px';
+            
+            // Get character name
+            const characters = JSON.parse(localStorage.getItem('classquest_characters') || '[]');
+            const characterName = characters[index].name;
+            
+            // Add content to the dialog
+            confirmDialog.innerHTML = `
+                <h3>Confirm Deletion</h3>
+                <p>Are you sure you want to delete <strong>${characterName}</strong>?</p>
+                <p>This action cannot be undone.</p>
+                <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                    <button id="cancel-delete" style="padding: 8px 16px; background-color: #ccc; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                    <button id="confirm-delete" style="padding: 8px 16px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
+                </div>
+            `;
+            
+            // Add overlay
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            overlay.style.zIndex = '999';
+            
+            // Add elements to the page
+            document.body.appendChild(overlay);
+            document.body.appendChild(confirmDialog);
+            
+            // Add event listeners
+            document.getElementById('cancel-delete').addEventListener('click', function() {
+                document.body.removeChild(overlay);
+                document.body.removeChild(confirmDialog);
+            });
+            
+            document.getElementById('confirm-delete').addEventListener('click', function() {
+                // Delete the character
+                characters.splice(index, 1);
+                localStorage.setItem('classquest_characters', JSON.stringify(characters));
+                updateCharacterList();
+                
+                // Remove the dialog and overlay
+                document.body.removeChild(overlay);
+                document.body.removeChild(confirmDialog);
+            });
+        }
+
+        function selectGender(gender) {
+            selectedGender = gender;
+            document.querySelectorAll('.gender-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelector(`.gender-option[data-gender="${gender}"]`).classList.add('selected');
+        }
+        
+        function selectCharacter(type) {
+            console.log("Selecting character:", type);
+            
+            // Remove selected class from all options
+            document.querySelectorAll('.character-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            const characterOptions = document.querySelectorAll('.character-option');
+            for (let i = 0; i < characterOptions.length; i++) {
+                const option = characterOptions[i];
+                const title = option.querySelector('h3').textContent.toLowerCase();
+                if (title === type.toLowerCase()) {
+                    option.classList.add('selected');
+                    
+                    // Update preview
+                    const preview = document.getElementById('character-preview');
+                    const previewImage = document.getElementById('preview-image');
+                    const previewName = document.getElementById('preview-name');
+                    const previewDescription = document.getElementById('preview-description');
+                    
+                    // Fix the image path for patriarch
+                    let imagePath = `${type}-character.png`;
+                    if (type === 'patriarch') {
+                        imagePath = 'patriarch-charater.png'; // Fix the typo in the filename
+                    }
+                    
+                    previewImage.src = imagePath;
+                    previewName.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+                    previewDescription.textContent = option.querySelector('p').textContent;
+                    preview.style.display = 'block';
+                    
+                    // Update gender preview images
+                    updateGenderPreviews(type);
+                    break;
+                }
+            }
+
+            // Store selected character type
+            currentCharacter = type;
+            
+            // Enable confirm button
+            document.getElementById('confirm-selection-btn').disabled = false;
+        }
+        
+        function updateGenderPreviews(characterType) {
+            // Fix the image path for patriarch
+            let maleImagePath = `${characterType}-character.png`;
+            let femaleImagePath = `${characterType}-female-character.png`;
+            
+            if (characterType === 'patriarch') {
+                maleImagePath = 'patriarch-charater.png'; // Fix the typo in the filename
+                femaleImagePath = 'file:///D:/cursor/ClassQuest/female-patriarch-character.png'; // Use the exact file path for female patriarch
+            } else if (characterType === 'king') {
+                femaleImagePath = 'female-king-character.png'; // Use the correct file path for female king
+            } else if (characterType === 'disciple') {
+                femaleImagePath = 'female-disciple-character.png'; // Use the correct file path for female disciple
+            } else if (characterType === 'prophet') {
+                femaleImagePath = 'female-prophet-character.png'; // Use the correct file path for female prophet
+            }
+            
+            console.log(`Updating gender previews for ${characterType}:`);
+            console.log(`- Male image: ${maleImagePath}`);
+            console.log(`- Female image: ${femaleImagePath}`);
+            
+            // Update the gender preview images
+            const malePreviewImage = document.getElementById('male-preview-image');
+            const femalePreviewImage = document.getElementById('female-preview-image');
+            
+            if (malePreviewImage) {
+                malePreviewImage.onerror = function() {
+                    console.error("Failed to load male preview image:", maleImagePath);
+                    this.src = 'placeholder-character.png';
+                };
+                malePreviewImage.src = maleImagePath;
+            }
+            
+            if (femalePreviewImage) {
+                femalePreviewImage.onerror = function() {
+                    console.error("Failed to load female preview image:", femaleImagePath);
+                    this.src = 'placeholder-character.png';
+                };
+                femalePreviewImage.src = femaleImagePath;
+            }
+        }
+
+        function updatePointsHistory(character) {
+            const historyContainer = document.getElementById('points-history');
+            
+            if (!character.pointsHistory || character.pointsHistory.length === 0) {
+                historyContainer.innerHTML = '<div class="points-history-item">No level history yet</div>';
+                return;
+            }
+            
+            historyContainer.innerHTML = character.pointsHistory.map(item => {
+                const date = new Date(item.date).toLocaleString();
+                const pointsClass = item.amount > 0 ? 'points-positive' : 'points-negative';
+                const sign = item.amount > 0 ? '+' : '';
+                return `<div class="points-history-item">
+                    <span class="${pointsClass}">${sign}${item.amount}</span> level - ${item.reason} (${date})
+                </div>`;
+            }).join('');
+        }
+        
+        function addPoints(isAdd) {
+            const amount = parseInt(document.getElementById('points-amount').value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid number of levels');
+                return;
+            }
+            
+            const characters = JSON.parse(localStorage.getItem('classquest_characters') || '[]');
+            const characterIndex = window.currentCharacterIndex;
+            
+            if (characterIndex === undefined || characterIndex < 0 || characterIndex >= characters.length) {
+                alert('Error: Character not found');
+                return;
+            }
+            
+            const character = characters[characterIndex];
+            const pointsChange = isAdd ? amount : -amount;
+            
+            // Initialize points if not exists
+            if (!character.points) {
+                character.points = 0;
+            }
+            
+            // Initialize points history if not exists
+            if (!character.pointsHistory) {
+                character.pointsHistory = [];
+            }
+            
+            // Update points
+            character.points += pointsChange;
+            
+            // Add to history
+            const reason = prompt(`Reason for ${isAdd ? 'adding' : 'subtracting'} level:`, '');
+            if (reason === null) {
+                // User cancelled
+                return;
+            }
+            
+            character.pointsHistory.unshift({
+                amount: pointsChange,
+                reason: reason || (isAdd ? 'Level added' : 'Level subtracted'),
+                date: new Date().toISOString()
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('classquest_characters', JSON.stringify(characters));
+            
+            // Update display
+            document.getElementById('profile-points').textContent = character.points;
+            updatePointsHistory(character);
+            
+            // Update character list if it's visible
+            updateCharacterList();
+        }
+
+        function createCharacter() {
+            const name = document.getElementById('character-name').value.trim();
+            
+            if (!name) {
+                alert('Please enter a name for your character');
+                return;
+            }
+            if (!selectedGender) {
+                alert('Please select a gender for your character');
+                return;
+            }
+            if (!currentCharacter) {
+                alert('Please select a character class');
+                return;
+            }
+
+            // Create character object
+            const character = {
+                name: name,
+                gender: selectedGender,
+                type: currentCharacter,
+                level: 1,
+                points: 0,
+                gems: 0,
+                pointsHistory: [],
+                achievements: ['Welcome to NorthShore Youth Class'],
+                createdAt: new Date().toISOString()
+            };
+
+            // Save character to localStorage
+            const characters = JSON.parse(localStorage.getItem('classquest_characters') || '[]');
+            characters.push(character);
+            localStorage.setItem('classquest_characters', JSON.stringify(characters));
+
+            // Update profile page with correct image path
+            let imagePath = `${currentCharacter}-character.png`;
+            if (currentCharacter === 'patriarch') {
+                imagePath = 'patriarch-charater.png'; // Fix the typo in the filename
+            } else if (currentCharacter === 'king' && selectedGender === 'female') {
+                imagePath = 'female-king-character.png'; // Use the correct file path for female king
+            } else if (currentCharacter === 'disciple' && selectedGender === 'female') {
+                imagePath = 'female-disciple-character.png'; // Use the correct file path for female disciple
+            } else if (currentCharacter === 'prophet' && selectedGender === 'female') {
+                imagePath = 'female-prophet-character.png'; // Use the correct file path for female prophet
+            } else if (currentCharacter === 'patriarch' && selectedGender === 'female') {
+                imagePath = 'file:///D:/cursor/ClassQuest/female-patriarch-character.png'; // Use the exact file path for female patriarch
+            }
+            
+            console.log(`Creating character: ${name} (${currentCharacter}, ${selectedGender}) with image: ${imagePath}`);
+            
+            // Set the image with error handling
+            const profileImage = document.getElementById('profile-hero-image');
+            profileImage.onerror = function() {
+                console.error("Failed to load profile image:", imagePath);
+                this.src = 'placeholder-character.png';
+            };
+            profileImage.src = imagePath;
+            
+            document.getElementById('profile-hero-name').textContent = name;
+            document.getElementById('profile-hero-title').textContent = `the ${currentCharacter.charAt(0).toUpperCase() + currentCharacter.slice(1)}`;
+            document.getElementById('profile-class').textContent = currentCharacter.charAt(0).toUpperCase() + currentCharacter.slice(1);
+            document.getElementById('profile-gender').textContent = selectedGender.charAt(0).toUpperCase() + selectedGender.slice(1);
+            document.getElementById('profile-points').textContent = '0';
+            document.getElementById('gems-count').textContent = '0';
+            
+            // Initialize points history
+            document.getElementById('points-history').innerHTML = '<div class="points-history-item">No level history yet</div>';
+
+            // Show profile page
+            document.getElementById('character-creation-form').style.display = 'none';
+            document.getElementById('character-profile').style.display = 'block';
+        }
+
+        function quickAddLevel(index, isAdd) {
+            const characters = JSON.parse(localStorage.getItem('classquest_characters') || '[]');
+            const character = characters[index];
+            
+            if (!character) {
+                alert('Error: Character not found');
+                return;
+            }
+            
+            // Initialize points if not exists
+            if (!character.points) {
+                character.points = 0;
+            }
+            
+            // Initialize points history if not exists
+            if (!character.pointsHistory) {
+                character.pointsHistory = [];
+            }
+            
+            // Update points (always add/subtract 1 for quick actions)
+            const pointsChange = isAdd ? 1 : -1;
+            character.points += pointsChange;
+            
+            // Add to history
+            character.pointsHistory.unshift({
+                amount: pointsChange,
+                reason: isAdd ? 'Quick level added' : 'Quick level subtracted',
+                date: new Date().toISOString()
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('classquest_characters', JSON.stringify(characters));
+            
+            // Update character list
+            updateCharacterList();
+        }
+
+        function updateGems(isAdd) {
+            const characters = JSON.parse(localStorage.getItem('classquest_characters') || '[]');
+            const characterIndex = window.currentCharacterIndex;
+            
+            if (characterIndex === undefined || characterIndex < 0 || characterIndex >= characters.length) {
+                alert('Error: Character not found');
+                return;
+            }
+            
+            const character = characters[characterIndex];
+            
+            // Initialize gems if not exists
+            if (!character.gems) {
+                character.gems = 0;
+            }
+            
+            // Update gems (add or subtract 1)
+            character.gems += isAdd ? 1 : -1;
+            
+            // Ensure gems don't go below 0
+            if (character.gems < 0) {
+                character.gems = 0;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('classquest_characters', JSON.stringify(characters));
+            
+            // Update display
+            document.getElementById('gems-count').textContent = character.gems;
+        }
+
+        function showShop() {
+            const characters = JSON.parse(localStorage.getItem('classquest_characters') || '[]');
+            const character = characters[window.currentCharacterIndex];
+            
+            // Update gems display
+            document.getElementById('shop-gems-count').textContent = character.gems || 0;
+            
+            // Hide other screens
+            document.getElementById('character-profile').style.display = 'none';
+            
+            // Show shop
+            document.getElementById('shop-screen').style.display = 'block';
+            
+            // Load shop items
+            loadShopItems();
+        }
+
+        function hideShop() {
+            // Hide shop
+            document.getElementById('shop-screen').style.display = 'none';
+            
+            // Show character profile
+            document.getElementById('character-profile').style.display = 'block';
+        }
+
+        function loadShopItems() {
+            const shopItems = [
+                { id: 'sword1', name: 'Basic Sword', cost: 10, type: 'weapon', stats: { attack: 2 } },
+                { id: 'sword2', name: 'Steel Sword', cost: 25, type: 'weapon', stats: { attack: 5 } },
+                { id: 'armor1', name: 'Leather Armor', cost: 15, type: 'armor', stats: { defense: 3 } },
+                { id: 'armor2', name: 'Steel Armor', cost: 30, type: 'armor', stats: { defense: 6 } },
+                { id: 'potion1', name: 'Health Potion', cost: 5, type: 'consumable', stats: { health: 20 } },
+                { id: 'potion2', name: 'Strength Potion', cost: 8, type: 'consumable', stats: { attack: 3 } }
+            ];
+
+            const shopContainer = document.getElementById('shop-items');
+            shopContainer.innerHTML = '';
+
+            shopItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'shop-item';
+                
+                const statsText = Object.entries(item.stats)
+                    .map(([stat, value]) => `${stat}: +${value}`)
+                    .join(', ');
+
+                itemElement.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <p>Type: ${item.type}</p>
+                    <p>Stats: ${statsText}</p>
+                    <p>Cost: ${item.cost} gems</p>
+                    <button onclick="purchaseItem('${item.id}')">Purchase</button>
+                `;
+
+                shopContainer.appendChild(itemElement);
+            });
+        }
+
+        function purchaseItem(itemId) {
+            const characters = JSON.parse(localStorage.getItem('classquest_characters') || '[]');
+            const character = characters[window.currentCharacterIndex];
+            
+            const shopItems = [
+                { id: 'sword1', name: 'Basic Sword', cost: 10, type: 'weapon', stats: { attack: 2 } },
+                { id: 'sword2', name: 'Steel Sword', cost: 25, type: 'weapon', stats: { attack: 5 } },
+                { id: 'armor1', name: 'Leather Armor', cost: 15, type: 'armor', stats: { defense: 3 } },
+                { id: 'armor2', name: 'Steel Armor', cost: 30, type: 'armor', stats: { defense: 6 } },
+                { id: 'potion1', name: 'Health Potion', cost: 5, type: 'consumable', stats: { health: 20 } },
+                { id: 'potion2', name: 'Strength Potion', cost: 8, type: 'consumable', stats: { attack: 3 } }
+            ];
+
+            const item = shopItems.find(item => item.id === itemId);
+            if (!item) {
+                alert('Item not found!');
+                return;
+            }
+
+            if (!character.gems || character.gems < item.cost) {
+                alert('Not enough gems!');
+                return;
+            }
+
+            // Deduct gems
+            character.gems -= item.cost;
+
+            // Add item to inventory
+            if (!character.inventory) {
+                character.inventory = [];
+            }
+            character.inventory.push(item);
+
+            // Save changes
+            characters[window.currentCharacterIndex] = character;
+            localStorage.setItem('classquest_characters', JSON.stringify(characters));
+
+            // Update display
+            document.getElementById('shop-gems-count').textContent = character.gems;
+            alert(`Successfully purchased ${item.name}!`);
+        }
+
+        // Initialize character selection when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show character list by default
+            document.querySelector('.character-selection').style.display = 'none';
+            document.getElementById('character-creation-form').style.display = 'none';
+            document.getElementById('character-profile').style.display = 'none';
+            document.getElementById('shop-screen').style.display = 'none';
+            document.getElementById('character-list').style.display = 'block';
+            
+            // Update character list
+            updateCharacterList();
+            
+            // Pre-load all character images to ensure they're available
+            const imagePaths = [
+                'prophet-character.png',
+                'King-character.png',
+                'patriarch-charater.png',
+                'disciple-character.png',
+                'female-king-character.png',
+                'female-prophet-character.png',
+                'female-patriarch-character.png',
+                'female-disciple-character.png'
+            ];
+            
+            imagePaths.forEach(path => {
+                const img = new Image();
+                img.onload = function() {
+                    console.log(`Image preloaded successfully: ${path}`);
+                };
+                img.onerror = function() {
+                    console.error(`Failed to preload image: ${path}`);
+                };
+                img.src = path;
+            });
+            
+            // Add a test function to check if images are loading correctly
+            window.testImageLoading = function() {
+                const testImages = [
+                    'female-patriarch-character.png',
+                    'patriarch-charater.png',
+                    'prophet-character.png',
+                    'King-character.png',
+                    'disciple-character.png'
+                ];
+                
+                testImages.forEach(path => {
+                    const img = new Image();
+                    img.onload = function() {
+                        console.log(`Test image loaded successfully: ${path}`);
+                        alert(`Image loaded successfully: ${path}`);
+                    };
+                    img.onerror = function() {
+                        console.error(`Test image failed to load: ${path}`);
+                        alert(`Image failed to load: ${path}`);
+                    };
+                    img.src = path;
+                });
+            };
+            
+            // Add a function to directly test the female patriarch image
+            window.testFemalePatriarchImage = function() {
+                const img = new Image();
+                img.onload = function() {
+                    console.log("Female patriarch image loaded successfully!");
+                    alert("Female patriarch image loaded successfully!");
+                };
+                img.onerror = function() {
+                    console.error("Failed to load female patriarch image!");
+                    alert("Failed to load female patriarch image!");
+                };
+                img.src = 'female-patriarch-character.png';
+            };
+        });
+    </script>
+</body>
+</html>
